@@ -12,7 +12,8 @@
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
 import "phoenix_html";
-
+import ReactDOM from 'react-dom';
+import React from 'react';
 // Import local files
 //
 // Local files can be imported directly using relative
@@ -20,13 +21,13 @@ import "phoenix_html";
 
 // import socket from "./socket"
 
-import run_demo from "./demo";
+import { Game } from "./game-component";
+
 
 function init() {
   let root = document.getElementById('game');
-  run_demo(root);
+  ReactDOM.render(<Game/>, root);
 }
 
 // Use jQuery to delay until page loaded.
 $(init);
-
