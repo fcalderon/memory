@@ -13,13 +13,37 @@ export class Game extends React.Component {
   render(){
     return (<div>
       <h1>Game</h1>
+      <button className="btn btn-primary" onClick={ () => { this.resetGame() }}>
+        Reset game
+      </button>
       <div>
-        <Board board={ this.state.board } tileClicked={ (tile) => this.tileClicked(tile) }/>
+         {
+           isGameOver(this.state)
+           ?
+           <div>
+             <h2>Game over</h2>
+             <h3>Score: <b>{this.state.clicks}</b> <small>(less is better)</small></h3>
+           </div>
+           :
+           <div>
+             <h2>Playing...</h2>
+             <h3>Clicks: {this.state.clicks}</h3>
+           </div>
+         }
+      </div>
+      <div>
+        <Board board={ this.state.board }
+               clicksEnabled={ this.state.clicksEnabled }
+               tileClicked={ (tile) => this.tileClicked(tile) }/>
       </div>
     </div>)
   }
 
-  setTileVisible(tile) {
+  resetGame() {
+    this.setState(getInitialGameState());
+  }
+
+  setTileVisible(tile, callback) {
     let newBoard = [ ...this.state.board ];
 
     newBoard[tile.index] = { letter: tile.letter,
@@ -27,29 +51,76 @@ export class Game extends React.Component {
                              index: tile.index,
                              visible: true };
 
+    console.log('>> setTileVisible: Updating state');
     this.setState({
       clicks: this.state.clicks,
       timeElapse: this.state.timeElapse,
       board: newBoard,
-      currentTile: this.state.currentTile
+      currentTile: this.state.currentTile,
+      clicksEnabled: this.state.clicksEnabled
+    }, () => { if (callback) callback() });
+  }
+
+  setClicksEnabled(enabled, callback) {
+    let newState = {
+      clicks: this.state.clicks,
+      timeElapse: this.state.timeElapse,
+      board: this.state.board,
+      currentTile: this.state.currentTile,
+      clicksEnabled: false,
+      someRandomValue: 22343
+    };
+    console.log('>> setClicksEnabled: Updating state');
+    this.setState(newState, () => {
+      console.log('>>>>> Clicks set enabled', enabled, this.state, newState);
+      callback();
+    });
+  }
+  upClicks() {
+    this.setState({
+      clicks: this.state.clicks + 1,
+      timeElapse: this.state.timeElapse,
+      board: this.state.board,
+      currentTile: this.state.currentTile,
+      clicksEnabled: this.state.clicksEnabled
+    });
+  }
+  tileClicked(tile) {
+    if (tile.visible || tile.discovered || !this.state.clicksEnabled) {
+      return;
+    }
+
+    console.log('Tile clicked: ', tile);
+
+    let firstTileSelected = !!this.state.currentTile;
+
+    console.log('Clicks enabled?', !firstTileSelected, this.state);
+
+    this.setTileVisible(tile, () => {
+      console.log('First tile selected?', firstTileSelected)
+
+      if (firstTileSelected) {
+        this.setClicksEnabled(false, () => {
+          console.log('First tile already selected, setting timeout',
+              this.state);
+          setTimeout(() => {
+            this.updateState(tile, true);
+          }, 1000);
+          this.upClicks()
+        });
+
+      } else {
+        this.updateState(tile, false, () => this.upClicks());
+      }
     });
   }
 
-
-  tileClicked(tile) {
-    console.log('Tile clicked: ', tile);
-    this.setTileVisible(tile);
-    setTimeout(() => {
-      this.updateState(tile)
-    }, 1000);
-  }
-
-  updateState(tile) {
+  updateState(tile, afterTimeout, callback) {
     let newBoard = [ ...this.state.board ];
 
-    let newClicks = this.state.clicks + 1;
-
     let currentTile = this.state.currentTile;
+
+    let twoTilesSelected = !!currentTile;
 
     if (!!currentTile) {
       let discovered = currentTile.letter === tile.letter;
@@ -71,12 +142,15 @@ export class Game extends React.Component {
       currentTile = tile;
     }
 
+    console.log('>> updateState: Updating state');
+
     this.setState({
-      clicks: newClicks,
+      clicks: this.state.clicks,
       timeElapse: this.state.timeElapse,
       board: newBoard,
-      currentTile: currentTile
-    });
+      currentTile: currentTile,
+      clicksEnabled: true
+    }, () => { if (!!callback) callback() });
     console.log('Updated state', this.state);
   }
 }
@@ -97,8 +171,8 @@ function getInitialGameState() {
     board: [],
     clicks: 0,
     timeElapse: 0,
-    currentTile: undefined
-
+    currentTile: undefined,
+    clicksEnabled: true
   }
 
   const itemsLength = items.length;

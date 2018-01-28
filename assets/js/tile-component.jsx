@@ -8,13 +8,25 @@ export class Tile extends React.Component {
     super(props);
   }
 
+  tileClasses(tile, clicksEnabled) {
+    let classes = clicksEnabled ? 'clickable' : 'disabled';
+
+    if (tile.visible) {
+       classes = 'tile--visible';
+    } else if (tile.discovered) {
+       classes = ' tile--discovered';
+    }
+
+    return classes;
+  }
+
   render() {
     return (
-      <div className="tile">
-        <p>{ this.props.tile.letter }</p>
-        <p>{ this.props.tile.visible ? 'Visible' : 'Not visible'}</p>
-        <p>{ this.props.tile.discovered ? 'Discovered' : 'Not discovered' }</p>
-        <p>{ this.props.tile.index }</p>
+      <div className={"tile "
+          + this.tileClasses(this.props.tile, this.props.clicksEnabled) }>
+        <p className="tile__letter">
+        { this.props.tile.visible ? this.props.tile.letter : '' }
+        </p>
       </div>
     );
   }

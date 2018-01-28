@@ -9,19 +9,18 @@ export class Board extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
+    console.log('Board props', props);
   }
 
   handleClick(tile) {
-    console.log('Clicked', tile);
-    this.props.tileClicked(tile)
+    this.props.tileClicked(tile);
   }
-  renderBoard(board) {
+  renderBoard(board, clicksEnabled) {
     let items = [];
     for (let i = 0; i < board.length ; i++) {
       items.push(
           <div className="col-3" key={i} onClick={() => this.handleClick(board[i])}>
-            <Tile tile={board[i]}/>
+            <Tile tile={board[i]} clicksEnabled={clicksEnabled}/>
           </div>
       );
     }
@@ -32,7 +31,7 @@ export class Board extends React.Component {
     return (
     <div>
       <div className="row">
-        { this.renderBoard(this.props.board) }
+        { this.renderBoard(this.props.board, this.props.clicksEnabled) }
       </div>
     </div>
     );

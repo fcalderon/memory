@@ -10,4 +10,25 @@ h1 { text-align: center; }
   height: 150px;
   background-color: green;
   margin-bottom: 10px;
+  text-align: center;
+}
+
+.tile__letter {
+  font-size: 50px;
+}
+
+.tile--visible {
+  background-color: white;
+}
+
+.tile--discovered {
+  background-color: gray;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.disabled {
+  cursor: not-allowed;
 }
