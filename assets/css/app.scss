@@ -4,3 +4,31 @@
 
 .side { padding: 4ex; text-align: center; }
 h1 { text-align: center; }
+
+.tile {
+  border: solid;
+  height: 150px;
+  background-color: green;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.tile__letter {
+  font-size: 50px;
+}
+
+.tile--visible {
+  background-color: white;
+}
+
+.tile--discovered {
+  background-color: gray;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.disabled {
+  cursor: not-allowed;
+}

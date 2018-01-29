@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
+import { Board } from './board-component.jsx';
 
 export default function run_demo(root) {
   ReactDOM.render(<Demo side={0}/>, root);
@@ -20,12 +21,19 @@ class Demo extends React.Component {
   render() {
     var toggle = this.toggle.bind(this);
     return (
-      <div className="row">
-        <Side show={this.state.side == 0} toggle={toggle} />
-        <div className="col">
-          &nbsp;
+      <div>
+        <div className="row">
+          <Side show={this.state.side == 0} toggle={toggle} />
+          <div className="col">
+            &nbsp;
+          </div>
+          <Side show={this.state.side == 1} toggle={toggle} />
         </div>
-        <Side show={this.state.side == 1} toggle={toggle} />
+        <div className="row">
+          <div className="col">
+            <Board/>
+          </div>
+        </div>
       </div>
     );
   }
@@ -47,4 +55,3 @@ function Side(params) {
     );
   }
 }
-
