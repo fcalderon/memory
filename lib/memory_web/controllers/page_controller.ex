@@ -4,4 +4,10 @@ defmodule MemoryWeb.PageController do
   def index(conn, _params) do
     render conn, "index.html"
   end
+
+  def game(conn, params) do
+    IO.puts("Params: ")
+    IO.inspect(params)
+    render conn, "game.html", game: params["game"]
+  end
 end

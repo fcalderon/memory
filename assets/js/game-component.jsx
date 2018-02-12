@@ -1,13 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Board } from './board-component.jsx';
 
 export const VALID_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 export class Game extends React.Component {
-  constructor(){
+  constructor(props){
     super();
     this.state = getInitialGameState();
+    this.channel = props.channel;
+    this.channel.join()
+        .receive("ok", view => {
+          console.log("Got okay: ",view);
+        })
+        .receive("error", res => {
+            console.log("Got error: ", res);
+        })
   }
 
   render(){
@@ -86,6 +93,10 @@ export class Game extends React.Component {
     });
   }
   tileClicked(tile) {
+    this.channel.push("guess", {"location": "say_waat"})
+        .receive("ok", (res) => {
+          console.log("Pushed and got response", res);
+        });
     if (tile.visible || tile.discovered || !this.state.clicksEnabled) {
       return;
     }
@@ -97,7 +108,7 @@ export class Game extends React.Component {
     console.log('Clicks enabled?', !firstTileSelected, this.state);
 
     this.setTileVisible(tile, () => {
-      console.log('First tile selected?', firstTileSelected)
+      console.log('First tile selected?', firstTileSelected);
 
       if (firstTileSelected) {
         this.setClicksEnabled(false, () => {

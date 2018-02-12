@@ -19,14 +19,17 @@ import React from 'react';
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import socket from "./socket"
 
 import { Game } from "./game-component";
 
 
 function init() {
   let root = document.getElementById('game');
-  ReactDOM.render(<Game/>, root);
+  if (root) {
+      let channel = socket.channel("games:francisco", {});
+      ReactDOM.render(<Game channel={channel}/>, root);
+  }
 }
 
 // Use jQuery to delay until page loaded.

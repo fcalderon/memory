@@ -1,7 +1,12 @@
-<h1>Memory Game</h1>
+<h1>Enter name</h1>
 
-<div id="game">
-  Loading...
+<div class="row">
+<div class="col">
+<input placeholder="Name">
+</div>
+<div class="col">
+<a href="/game">Start game</a>
+</div>
 </div>
 
 
