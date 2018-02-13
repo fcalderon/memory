@@ -4,8 +4,7 @@ defmodule MemoryWeb.GamesChannel do
   alias Memory.Game
 
   def join("games:" <> name, payload, socket) do
-    IO.puts("Joining game")
-    game = Game.new()
+    game = Memory.GameBackup.load(name) || Game.new()
     socket = socket
     |> assign(:game, game)
     |> assign(:name, name)
@@ -13,14 +12,9 @@ defmodule MemoryWeb.GamesChannel do
   end
 
   def handle_in("guess", %{"guess" => guess}, socket) do
-    IO.puts("Handling in")
-    IO.inspect(guess)
     game = Game.guess(socket.assigns[:game], guess)
-    IO.puts("Guess set")
-    IO.inspect(game)
+    Memory.GameBackup.save(socket.assigns[:name], game)
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
-
-#    socket = assign(socket, :game, game)
   end
 end
