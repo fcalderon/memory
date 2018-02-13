@@ -13,8 +13,7 @@ defmodule Memory.Game do
 
   def client_view(game) do
     %{
-      game: "in progress",
-      clicks: 0,
+      clicks: game.clicks,
       skeleton: get_skeleton(game.board, game.guessed, game.guess1, game.guess2),
       guess1: game.guess1,
       guess2: game.guess2
@@ -22,28 +21,21 @@ defmodule Memory.Game do
   end
 
   def guess(game, guess) do
-    IO.puts("Guessing")
-    IO.inspect(guess)
-    IO.inspect(game)
-    updated = Map.put(game, :clicks, game.clicks + 1)
-
     if guess == nil do
-      IO.puts("Clearing guesses to nil")
-      updated = Map.put(updated, :guess1, nil)
+      updated = Map.put(game, :guess1, nil)
       updated = Map.put(updated, :guess2, nil)
 
     else
+      updated = Map.put(game, :clicks, game.clicks + 1)
+
       if updated.guess1 == nil do
-        IO.puts("guess1 is nill")
-        updated = Map.put(game, :guess1, guess)
+        updated = Map.put(updated, :guess1, guess)
       else
         if updated.guess2 == nil do
-          IO.puts("guess2 is nill")
-          updated = Map.put(game, :guess2, guess)
+          updated = Map.put(updated, :guess2, guess)
         end
 
         if updated.guess1 != nil and updated.guess2 != nil do
-          IO.puts("Neither guess is nil")
           guessedLetter1 = Enum.at(updated.board, updated.guess1)
           guessedLetter2 = Enum.at(updated.board, updated.guess2)
           if guessedLetter1 == guessedLetter2 do
@@ -52,8 +44,6 @@ defmodule Memory.Game do
         end
       end
     end
-    IO.puts(">>> Updated")
-    IO.inspect(updated)
     updated
   end
 
@@ -85,9 +75,6 @@ defmodule Memory.Game do
     if guess2 != nil do
       resultingList = List.update_at(resultingList, guess2, fn(x) -> Enum.at(board , guess2) end)
     end
-
-    IO.puts("Guesses set")
-    IO.inspect(resultingList)
 
     resultingList
   end
