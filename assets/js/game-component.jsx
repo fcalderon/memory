@@ -57,7 +57,11 @@ export class Game extends React.Component {
     }
 
     resetGame() {
-        this.setState(getInitialGameState());
+        this.channel.push("reset", {})
+            .receive("ok", view => {
+                console.log(view);
+                this.setState(toState(view))
+            })
     }
 
     setClicksEnabled(enabled, callback) {
@@ -135,8 +139,8 @@ function toTiles(skeleton) {
         switch (skeleton[i]) {
             case '*':
                 tiles.push({
-                   visible: false,
-                   discovered: false,
+                    visible: false,
+                    discovered: false,
                     index: i
                 });
                 break;

@@ -26,11 +26,33 @@ import { Game } from "./game-component";
 
 function init() {
   let root = document.getElementById('game');
+  console.log(window.location.href);
+  const userName = getParameterByName('user_name', window.location.href);
+  console.log(userName);
   if (root) {
-      let channel = socket.channel("games:francisco", {});
+      let channel = socket.channel('games:' + userName, {});
       ReactDOM.render(<Game channel={channel}/>, root);
   }
 }
 
 // Use jQuery to delay until page loaded.
 $(init);
+
+/**
+ * Source StackOverflow
+ *
+ * https://stackoverflow.com/a/901144/3400198
+ *
+ * @param name
+ * @param url
+ * @returns {*}
+ */
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
