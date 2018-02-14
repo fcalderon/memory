@@ -1,6 +1,5 @@
 // the board component
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Tile} from './tile-component.jsx';
 
 export const VALID_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
