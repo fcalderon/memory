@@ -4,9 +4,6 @@ defmodule MemoryWeb.GamesChannel do
   alias Memory.Game
 
   def join("games:" <> name, payload, socket) do
-    IO.inspect(name)
-    IO.inspect(payload)
-
     game = Memory.GameBackup.load(name) || Game.new()
     socket = socket
     |> assign(:game, game)

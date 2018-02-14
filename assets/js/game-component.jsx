@@ -72,9 +72,7 @@ export class Game extends React.Component {
             currentTile: this.state.currentTile,
             clicksEnabled: enabled
         };
-        console.log('>> setClicksEnabled: Updating state', enabled);
         this.setState(newState, () => {
-            console.log('>>>>> Clicks set enabled', enabled, this.state, newState);
             if (!!callback) callback();
         });
     }

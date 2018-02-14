@@ -27,7 +27,10 @@ import { Game } from "./game-component";
 function init() {
   let root = document.getElementById('game');
   console.log(window.location.href);
-  const userName = getParameterByName('user_name', window.location.href);
+  let userName = getParameterByName('user_name', window.location.href);
+  if (!userName || userName == null) {
+      userName = 'anonymous'
+  }
   console.log(userName);
   if (root) {
       let channel = socket.channel('games:' + userName, {});
